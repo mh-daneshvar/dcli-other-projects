@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+
+  catgalogue_service:
+    image: python:3.9
+    container_name: project-one-catalogue-service
+    working_dir: /usr/src/app
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - "5002:5000"
+    command: bash -c "pip install -r requirements.txt && python app.py"
+    environment:
+      MYSQL_HOST: mysql_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: testdb
+    depends_on:
+      - mysql_db
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: project-one-catalogue-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

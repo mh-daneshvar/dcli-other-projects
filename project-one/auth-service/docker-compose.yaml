@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+
+  auth_service:
+    image: golang:1.21
+    container_name: project-one-auth-service
+    working_dir: /usr/src/app
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - "5003:8080"
+    command: bash -c "go mod tidy && go run main.go"
+    depends_on:
+      - redis_db
+
+  redis_db:
+    image: redis:7.0
+    container_name: project-one-auth-db
+    ports:
+      - "6379:6379"
